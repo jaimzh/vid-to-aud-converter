@@ -50,23 +50,21 @@ function handleFiles(files) {
         return;
     }
 
-    // Display the selected file details
-    console.log('Selected file:', file.name);
-
     selectedFile = file; // Store the selected file
 
-    // Optionally, update the UI to show file info
-    const fileInfoElement = document.createElement('p');
-    fileInfoElement.textContent = `Selected file: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
-    
     // Remove any existing file info
     const existingFileInfo = dragndropArea.querySelector('.file-info');
     if (existingFileInfo) {
         dragndropArea.removeChild(existingFileInfo);
     }
     
+    // Create new file info element
+    const fileInfoElement = document.createElement('p');
     fileInfoElement.classList.add('file-info');
+    fileInfoElement.textContent = `Selected file: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
     dragndropArea.appendChild(fileInfoElement);
+
+    return fileInfoElement;
 }
 
 function convertFile(conversionType) {
@@ -75,12 +73,14 @@ function convertFile(conversionType) {
         return;
     }
 
-    // Log file details for debugging
-    console.log('File details:', {
-        name: selectedFile.name,
-        type: selectedFile.type,
-        size: selectedFile.size
-    });
+    // Find the file info element
+    const fileInfoElement = dragndropArea.querySelector('.file-info');
+
+    if (fileInfoElement) {
+        // Update file info to show converting status
+        fileInfoElement.textContent = 'Converting...';
+        fileInfoElement.style.color = 'blue';
+    }
 
     const formData = new FormData();
     formData.append("file", selectedFile);
@@ -102,7 +102,7 @@ function convertFile(conversionType) {
     xhr.upload.addEventListener('progress', (event) => {
         if (event.lengthComputable) {
             const progress = (event.loaded / event.total) * 100;
-            progressBar.querySelector('div').style.width = `${progress}%`;  // Update the progress bar width
+            progressBar.querySelector('div').style.width = `${progress}%`;
         }
     });
 
@@ -111,28 +111,48 @@ function convertFile(conversionType) {
         if (xhr.status === 200) {
             progressBar.querySelector('div').style.width = '100%';
 
-            const blob = xhr.response;  // Now xhr.response *should* be a Blob
+            const blob = xhr.response;
 
-            if (blob instanceof Blob) { // Add a check for Blob type
+            if (blob instanceof Blob) {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
                 link.download = `converted-file.${conversionType}`;
                 link.click();
-                alert('Conversion complete!');
+                
+                // Update file info on successful conversion
+                if (fileInfoElement) {
+                    fileInfoElement.textContent = 'CONVERSION COMPLETE BABY LETS GOOOO!!! Thank God this thing worked';
+                    fileInfoElement.style.color = 'green';
+                }
             } else {
                 console.error("xhr.response is not a Blob:", xhr.response);
-                alert('Conversion failed: Invalid response type.'); // More informative error message
+                
+                // Update file info on conversion failure
+                if (fileInfoElement) {
+                    fileInfoElement.textContent = 'Conversion failed: Invalid response type.';
+                    fileInfoElement.style.color = 'red';
+                }
             }
         } else {
             progressBar.style.display = 'none';
-            alert('Conversion failed');
+            
+            // Update file info on HTTP error
+            if (fileInfoElement) {
+                fileInfoElement.textContent = 'Conversion failed';
+                fileInfoElement.style.color = 'red';
+            }
         }
     };
 
     // Handle errors
     xhr.onerror = () => {
         progressBar.style.display = 'none';
-        alert('An error occurred during conversion');
+        
+        // Update file info on network error
+        if (fileInfoElement) {
+            fileInfoElement.textContent = 'An error occurred during conversion';
+            fileInfoElement.style.color = 'red';
+        }
     };
 
     // Send the request with the form data
@@ -141,9 +161,9 @@ function convertFile(conversionType) {
 
 // Event listeners for the convert buttons
 convertToMp3Btn.addEventListener('click', () => {
-    convertFile('mp3'); // Call the convert function with 'mp3' type
+    convertFile('mp3');
 });
 
 convertToWavBtn.addEventListener('click', () => {
-    convertFile('wav'); // Call the convert function with 'wav' type
+    convertFile('wav');
 });
