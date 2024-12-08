@@ -1,0 +1,6 @@
+# Virtual environment
+backend/venv/
+
+# Compiled Python files
+backend/__pycache__/
+

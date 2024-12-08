@@ -1,0 +1,255 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital@0;1&family=Outfit:wght@100..900&display=swap");
+
+:root {
+  --text: #0f1b08;
+  --background: #fbfcfe;
+  --primary: #3498db;
+  --secondary: #8dddc1;
+  --accent: #2781ff;
+  --primary-secondary-accent: linear-gradient(135deg, #3498db, #227256, #2b9190);
+  --static6: #ffffff46;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", Helvetica, sans-serif;
+}
+
+body {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
+  padding: 2rem;
+  gap: 4rem;
+  background-color: #f3f7fe;
+  color: var(--text);
+  opacity: 0.8;
+  background-image: radial-gradient(#8bbbff 0.65px, #f3f7fe 0.65px);
+  background-size: 13px 13px;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  height: 6rem;
+  margin: 1rem;
+}
+
+h1 {
+  font-size: clamp(1.5rem, 5vw, 3rem);
+  margin-bottom: 1rem;
+}
+
+h1 span {
+  color: var(--accent);
+  padding: 1rem;
+}
+
+header p {
+  font-size: 0.8rem;
+  width: 80%;
+  padding: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.text {
+  font-size: 12px;
+  z-index: 2;
+}
+
+#choose-files {
+  font-weight: bold;
+  text-decoration: none;
+  transition: text-decoration 0.3s ease;
+}
+
+#choose-files:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.card {
+  background-color: rgb(255, 255, 255);
+  padding: 1rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  width: 35%;
+  max-width: 500px;
+  height: auto;
+  transition: transform 0.3s ease;
+  z-index: 1;
+}
+
+.card:hover {
+  transform: scale(1.01);
+}
+
+.overlay {
+  height: 100%;
+  width: 100%;
+  background-color: #2781ff00;
+  position: absolute;
+  z-index: 1;
+  transition: background-color 0.3s ease;
+}
+
+.overlay:hover {
+  background-color: #2781ff12;
+}
+
+.dragndrop {
+  position: relative;
+  background-color: #f9fdff;
+  height: 100%;
+  border: 2px dashed var(--accent);
+  width: 100%;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.upload-icon {
+  width: 4rem;
+  fill: var(--accent);
+  opacity: 0.8;
+}
+
+.progressbar {
+  margin-top: 1rem;
+  background-color: #ecf0f1;
+  border-radius: 5px;
+  height: 10px;
+  width: 100%;
+}
+
+.progressbar div {
+  background-color: var(--accent);
+  width: 60%;
+  height: 100%;
+  border-radius: 5px;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 3rem;
+  margin-top: 1rem;
+}
+
+button {
+  background-color: var(--accent);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.9rem;
+  font-size: 12px;
+  font-weight: 500;
+  color: #f9fdff;
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+button:hover {
+  outline: 2px solid var(--accent);
+  cursor: pointer;
+  background-color: transparent;
+  color: var(--accent);
+}
+
+button:active {
+  background-color: var(--accent);
+  color: #f9fdff;
+}
+
+footer {
+  color: #7f8c8d;
+  margin-top: 2rem;
+  font-size: 0.7rem;
+}
+
+/* Small devices */
+@media (max-width: 450px) {
+  body {
+    padding: 1rem;
+    gap: 2rem;
+  }
+
+  h1 {
+    font-size: rem;
+  }
+
+  header p {
+    font-size: 0.75rem;
+    display: none;
+  }
+
+  .card {
+    width: 100%;
+    height: auto;
+  }
+
+  button {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* Medium devices */
+@media (max-width: 768px) {
+  header p {
+    width: 85%;
+    font-size: 0.85rem;
+  }
+
+  .card {
+    width: 80%;
+  }
+
+  ul {
+    gap: 1rem;
+  }
+
+  button {
+    padding: 0.4rem 0.8rem;
+    font-size: 10px;
+  }
+}
+
+/* Large devices */
+@media (min-width: 1200px) {
+  body {
+    padding: 3rem;
+    gap: 5rem;
+  }
+
+  .card {
+    width: 35%;
+    max-width: 600px;
+  }
+
+  h1 {
+    font-size: 3.5rem;
+  }
+
+  ul {
+    gap: 4rem;
+  }
+}
