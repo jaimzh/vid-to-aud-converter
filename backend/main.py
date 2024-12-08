@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import ffmpeg
+import uuid
 
 app = FastAPI()
 
@@ -29,7 +30,9 @@ check_ffmpeg_installed()  # This should print the FFmpeg version if installed co
 
 # Utility function to convert to MP3
 def convert_file_to_mp3(input_file):
-    output_file = input_file.replace('.mp4', '.mp3')
+    # Generate a unique output file name by appending a UUID to avoid overwriting
+    unique_suffix = str(uuid.uuid4())[:8]
+    output_file = input_file.replace('.mp4', f'_{unique_suffix}.mp3')
     print(f"Converting {input_file} to {output_file}")
     try:
         (
@@ -46,7 +49,9 @@ def convert_file_to_mp3(input_file):
 
 # Utility function to convert to WAV
 def convert_to_wav(input_file):
-    output_file = input_file.replace('.mp4', '.wav')
+    # Generate a unique output file name by appending a UUID to avoid overwriting
+    unique_suffix = str(uuid.uuid4())[:8]
+    output_file = input_file.replace('.mp4', f'_{unique_suffix}.wav')
     try:
         (
             ffmpeg.input(input_file)

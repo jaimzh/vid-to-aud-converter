@@ -91,43 +91,52 @@ function convertFile(conversionType) {
     progressBar.style.display = 'block';
     progressBar.querySelector('div').style.width = '0%';
 
-    fetch('https://vid-to-aud-converter.onrender.com' + endpoint, {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => {
-        // Log response status
-        console.log('Response status:', response.status);
-        
-        // Check if response is ok
-        if (!response.ok) {
-            return response.json().then(errorData => {
-                throw new Error(errorData.detail || 'Conversion failed');
-            });
+    // Create a new XMLHttpRequest object
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://vid-to-aud-converter.onrender.com' + endpoint, true);
+
+    // Set responseType to 'blob' to handle binary data
+    xhr.responseType = 'blob';
+
+    // Track the upload progress
+    xhr.upload.addEventListener('progress', (event) => {
+        if (event.lengthComputable) {
+            const progress = (event.loaded / event.total) * 100;
+            progressBar.querySelector('div').style.width = `${progress}%`;  // Update the progress bar width
         }
-        return response.blob();
-    })
-    .then(blob => {
-        // Update progress bar
-        progressBar.querySelector('div').style.width = '100%';
-        
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `converted-file.${conversionType}`;
-        link.click();
-        
-        // Hide progress bar after a short delay
-        setTimeout(() => {
-            progressBar.style.display = 'none';
-        }, 1000);
-    })
-    .catch(error => {
-        // Hide progress bar
-        progressBar.style.display = 'none';
-        
-        console.error('Error:', error);
-        alert(`Conversion error: ${error.message}`);
     });
+
+    // Track the overall response progress (download)
+    xhr.onload = () => {
+        if (xhr.status === 200) {
+            progressBar.querySelector('div').style.width = '100%';
+
+            const blob = xhr.response;  // Now xhr.response *should* be a Blob
+
+            if (blob instanceof Blob) { // Add a check for Blob type
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `converted-file.${conversionType}`;
+                link.click();
+                alert('Conversion complete!');
+            } else {
+                console.error("xhr.response is not a Blob:", xhr.response);
+                alert('Conversion failed: Invalid response type.'); // More informative error message
+            }
+        } else {
+            progressBar.style.display = 'none';
+            alert('Conversion failed');
+        }
+    };
+
+    // Handle errors
+    xhr.onerror = () => {
+        progressBar.style.display = 'none';
+        alert('An error occurred during conversion');
+    };
+
+    // Send the request with the form data
+    xhr.send(formData);
 }
 
 // Event listeners for the convert buttons

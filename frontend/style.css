@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Montserrat:ital@0;1&family=Outfit:wght@100..900&display=swap");
 
 :root {
-  --text: #0f1b08;
+  --text: #080f1b;
   --background: #fbfcfe;
   --primary: #3498db;
   --secondary: #8dddc1;
@@ -141,7 +141,7 @@ header p {
 
 .progressbar div {
   background-color: var(--accent);
-  width: 60%;
+  width: 0%;
   height: 100%;
   border-radius: 5px;
 }
@@ -258,4 +258,9 @@ footer {
 .dragndrop.dragging {
   border-color: var(--primary);
   background-color: rgba(39, 129, 255, 0.1);
+}
+
+.file-info {
+  font-size: 14px;
+  color: #555;
 }
