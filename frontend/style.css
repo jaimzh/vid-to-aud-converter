@@ -253,3 +253,9 @@ footer {
     gap: 4rem;
   }
 }
+
+
+.dragndrop.dragging {
+  border-color: var(--primary);
+  background-color: rgba(39, 129, 255, 0.1);
+}

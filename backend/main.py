@@ -4,7 +4,18 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 import os
 import ffmpeg
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # Utility function to convert to MP3
@@ -66,3 +77,27 @@ async def convert_to_mp3_endpoint(file: UploadFile = File(...)):
             print(f"Deleted input file: {input_file}")
         
             
+# POST endpoint to convert to WAV
+@app.post("/convert_to_wav")
+async def convert_to_wav_endpoint(file: UploadFile = File(...)):
+    # Same structure as the MP3 conversion endpoint
+    input_file = f"temp_{file.filename}"
+
+    try:
+        # Save uploaded file temporarily
+        with open(input_file, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+        # Convert the file to WAV
+        output_file = convert_to_wav(input_file)
+
+        if output_file:
+            # Return the converted file as a download
+            return FileResponse(output_file, filename=output_file, media_type="audio/wav")
+        else:
+            raise HTTPException(status_code=400, detail="WAV conversion failed")
+    finally:
+        # Clean up temporary files
+        if os.path.exists(input_file):
+            os.remove(input_file)
+            print(f"Deleted input file: {input_file}")
