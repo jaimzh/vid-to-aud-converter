@@ -61,7 +61,9 @@ function handleFiles(files) {
     // Create new file info element
     const fileInfoElement = document.createElement('p');
     fileInfoElement.classList.add('file-info');
-    fileInfoElement.textContent = `Selected file: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+    let fileName = file.name;
+    const fileNameTruncated = fileName.slice(0, 10 ) + '...';
+    fileInfoElement.textContent = `Selected file: ${fileNameTruncated} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
     dragndropArea.appendChild(fileInfoElement);
 
     return fileInfoElement;
