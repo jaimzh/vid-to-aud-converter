@@ -1,4 +1,5 @@
-let selectedFile = null;  // Variable to keep track of the selected file
+let selectedFile = null;
+let selectedFileName = ''; // Variable to keep track of the selected file
 const dragndropArea = document.querySelector('.dragndrop');
 const chooseFilesLink = document.querySelector('#choose-files');
 const progressBar = document.querySelector('.progressbar');
@@ -50,7 +51,8 @@ function handleFiles(files) {
         return;
     }
 
-    selectedFile = file; // Store the selected file
+    selectedFile = file; 
+    selectedFileName = file.name;// Store the selected file
 
     // Remove any existing file info
     const existingFileInfo = dragndropArea.querySelector('.file-info');
@@ -63,6 +65,9 @@ function handleFiles(files) {
     fileInfoElement.classList.add('file-info');
     let fileName = file.name;
     const fileNameTruncated = fileName.slice(0, 10 ) + '...';
+    
+
+
     fileInfoElement.textContent = `Selected file: ${fileNameTruncated} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
     dragndropArea.appendChild(fileInfoElement);
 
@@ -112,13 +117,14 @@ function convertFile(conversionType) {
     xhr.onload = () => {
         if (xhr.status === 200) {
             progressBar.querySelector('div').style.width = '100%';
+            console.log(`this is the selected file name ${selectedFileName}`);
 
             const blob = xhr.response;
 
             if (blob instanceof Blob) {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = `converted-file.${conversionType}`;
+                link.download = `${selectedFileName.replace(/\.[^.]+$/, '')}.${conversionType}`;
                 link.click();
                 
                 // Update file info on successful conversion
